@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center py-5 mb-4" 
+     style="background: url('{{ url_for('static', filename='img/hero-bg.svg') }}') no-repeat center center; 
+            background-size: cover; 
+            min-height: 400px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            position: relative;">
+    <div style="background: rgba(248, 248, 248, 0.9); 
+                padding: 2rem; 
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <h1 class="display-4">Willkommen bei SwissEat</h1>
+        <p class="lead">Entdecken Sie die besten Restaurants in Ihrer Nähe</p>
+        <div class="search-container my-4">
+            <form class="d-flex justify-content-center" method="GET" action="{{ url_for('restaurants.search') }}">
+                <div class="input-group mb-3" style="max-width: 600px;">
+                    <input type="text" class="form-control" name="q" placeholder="Suchen Sie nach Restaurants oder Gerichten...">
+                    <button class="btn btn-primary" type="submit">Suchen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<section class="featured-restaurants mb-5">
+    <h2 class="mb-4">Beliebte Restaurants</h2>
+    <div class="row">
+        {% for restaurant in restaurants %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='img/restaurants/' + restaurant.id|string + '.jpg') }}" 
+                     class="card-img-top" alt="{{ restaurant.name }}"
+                     style="height: 200px; object-fit: cover;"
+                     onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                <div class="card-body">
+                    <h5 class="card-title">{{ restaurant.name }}</h5>
+                    <p class="card-text">{{ restaurant.cuisine_type }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="rating">
+                            <span class="text-warning">★</span>
+                            <span>{{ "%.1f"|format(restaurant.rating) }}</span>
+                        </div>
+                        <small class="text-muted">{{ restaurant.delivery_time }} Min. Lieferzeit</small>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('restaurants.menu', restaurant_id=restaurant.id) }}" 
+                       class="btn btn-primary btn-sm">Zum Menü</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="features mb-5">
+    <h2 class="home-title mb-4">Warum SwissEat?</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="fas fa-utensils fa-3x mb-3"></i>
+                <h4>Große Auswahl</h4>
+                <p>Hunderte von Restaurants zur Auswahl  in der ganzen Schweiz.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="fas fa-truck fa-3x mb-3"></i>
+                <h4>Schnelle Lieferung</h4>
+                <p>Direkt zu Ihnen nach Hause geliefert</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="fas fa-star fa-3x mb-3"></i>
+                <h4>Top Bewertungen</h4>
+                <p>Von unseren zufriedenen Kunden</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

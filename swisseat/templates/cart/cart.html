@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Warenkorb</h1>
+
+    {% if cart and cart.items %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Artikel</th>
+                                <th>Preis</th>
+                                <th>Anzahl</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart.items %}
+                            <tr>
+                                <td>{{ item.menu_item.name }}</td>
+                                <td>{{ "%.2f"|format(item.price) }} CHF</td>
+                                <td>
+                                    <div class="input-group" style="width: 120px;">
+                                        <button class="btn btn-outline-secondary btn-sm" 
+                                                onclick="updateQuantity({{ item.id }}, -1)"
+                                                type="button">-</button>
+                                        <input type="number" class="form-control form-control-sm text-center" 
+                                               value="{{ item.quantity }}" min="1"
+                                               data-item-id="{{ item.id }}"
+                                               readonly>
+                                        <button class="btn btn-outline-secondary btn-sm" 
+                                                onclick="updateQuantity({{ item.id }}, 1)"
+                                                type="button">+</button>
+                                    </div>
+                                </td>
+                                <td>{{ "%.2f"|format(item.get_total()) }} CHF</td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger" 
+                                            onclick="removeFromCart({{ item.id }})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <button class="btn btn-outline-danger" onclick="clearCart()">
+                        Warenkorb leeren
+                    </button>
+                    <div class="text-end">
+                        <h5>Total: {{ "%.2f"|format(cart.get_total()) }} CHF</h5>
+                        <a href="{{ url_for('orders.checkout', restaurant_id=cart.restaurant_id) }}" class="btn btn-primary">
+                            Zur Kasse
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Ihr Warenkorb ist leer. <a href="{{ url_for('restaurants.list') }}">Jetzt bestellen</a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function updateQuantity(itemId, delta) {
+    fetch(`/cart/update/${itemId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ delta: delta })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message || 'Ein Fehler ist aufgetreten');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Ein Fehler ist aufgetreten');
+    });
+}
+
+function removeFromCart(itemId) {
+    if (!confirm('Möchten Sie diesen Artikel wirklich aus dem Warenkorb entfernen?')) {
+        return;
+    }
+    
+    fetch(`/cart/remove/${itemId}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message || 'Ein Fehler ist aufgetreten');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Ein Fehler ist aufgetreten');
+    });
+}
+
+function clearCart() {
+    if (!confirm('Möchten Sie den Warenkorb wirklich leeren?')) {
+        return;
+    }
+    
+    fetch('/cart/clear', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message || 'Ein Fehler ist aufgetreten');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Ein Fehler ist aufgetreten');
+    });
+}
+</script>
+{% endblock %}

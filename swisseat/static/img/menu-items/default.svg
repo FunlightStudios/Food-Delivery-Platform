@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hintergrund -->
+  <rect width="100%" height="100%" fill="#f8f9fa"/>
+  
+  <!-- Teller -->
+  <circle cx="200" cy="150" r="100" fill="#ffffff" stroke="#dee2e6" stroke-width="4"/>
+  
+  <!-- Besteck -->
+  <g transform="translate(200,150) rotate(45)">
+    <!-- Gabel -->
+    <rect x="-60" y="-10" width="40" height="4" fill="#adb5bd"/>
+    <rect x="-60" y="-2" width="40" height="4" fill="#adb5bd"/>
+    <rect x="-60" y="6" width="40" height="4" fill="#adb5bd"/>
+    
+    <!-- Messer -->
+    <path d="M 20,-10 L 60,-10 L 60,10 L 20,10 L 15,0 Z" fill="#adb5bd"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="250" font-family="Arial" font-size="16" text-anchor="middle" fill="#6c757d">
+    Menü Item
+  </text>
+</svg>

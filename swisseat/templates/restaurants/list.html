@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container">
+        <h1 class="mb-4">Restaurants</h1>
+        
+        <div class="list-search-form row mb-4">
+            <div class="col-md-6">
+                <form method="GET" action="{{ url_for('restaurants.search') }}" style="display: flex;" class="search-container form-inline">
+                    <input type="text" name="q" class="form-control mr-2" placeholder="Suche nach Restaurants...">
+                    <select name="cuisine" class="form-control mr-2">
+                        <option value="">Alle Küchen</option>
+                        <option value="italienisch">Italienisch</option>
+                        <option value="asiatisch">Asiatisch</option>
+                        <option value="amerikanisch">Amerikanisch</option>
+                        <option value="indisch">Indisch</option>
+                        <option value="schweizerisch">Schweizerisch</option>
+                        <option value="vegetarisch">Vegetarisch</option>
+                        <option value="vegan">Vegan</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Suchen</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for restaurant in restaurants.items %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ url_for('static', filename='img/restaurants/' + restaurant.id|string + '.jpg') }}" 
+                             class="card-img-top" alt="{{ restaurant.name }}"
+                             style="height: 200px; object-fit: cover;"
+                             onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ restaurant.name }}</h5>
+                            <p class="card-text">{{ restaurant.description[:100] }}...</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    {{ restaurant.cuisine_type }} • {{ restaurant.delivery_time }} Min. Lieferzeit
+                                </small>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="rating">
+                                    <span class="text-warning">★</span>
+                                    <span>{{ "%.1f"|format(restaurant.rating) }}</span>
+                                </div>
+                                <small class="text-muted">Min. Bestellung: CHF {{ "%.2f"|format(restaurant.minimum_order) }}</small>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ url_for('restaurants.menu', restaurant_id=restaurant.id) }}" 
+                               class="btn btn-primary btn-block">Zum Menü</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if restaurants.pages > 1 %}
+        <nav aria-label="Restaurant navigation">
+            <ul class="pagination justify-content-center">
+                {% for page_num in restaurants.iter_pages() %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == restaurants.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('restaurants.list', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+{% endblock content %}

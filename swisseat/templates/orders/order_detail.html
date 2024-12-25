@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Bestellung #{{ order.id }}</h1>
+            <p class="text-muted">
+                Bestellt am {{ order.created_at.strftime('%d.%m.%Y um %H:%M') }} Uhr
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Bestellstatus</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            {% if order.status == 'pending' %}
+                                <span class="badge bg-warning">In Bearbeitung</span>
+                            {% elif order.status == 'confirmed' %}
+                                <span class="badge bg-info">Bestätigt</span>
+                            {% elif order.status == 'delivered' %}
+                                <span class="badge bg-success">Geliefert</span>
+                            {% elif order.status == 'cancelled' %}
+                                <span class="badge bg-danger">Storniert</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if order.status == 'pending' %}
+                            <button class="btn btn-danger btn-sm cancel-order-btn" 
+                                    data-order-id="{{ order.id }}">
+                                Stornieren
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Restaurant</h5>
+                </div>
+                <div class="card-body">
+                    <h6>{{ order.restaurant.name }}</h6>
+                    <p class="mb-0">{{ order.restaurant.address }}</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Lieferadresse</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ order.delivery_address }}</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Bestellte Artikel</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Artikel</th>
+                                    <th>Preis</th>
+                                    <th>Anzahl</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items %}
+                                <tr>
+                                    <td>{{ item.menu_item.name }}</td>
+                                    <td>{{ "%.2f"|format(item.price_at_time) }} CHF</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ "%.2f"|format(item.get_total()) }} CHF</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end">Zwischensumme:</td>
+                                    <td>{{ "%.2f"|format(order.get_total()) }} CHF</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end">Liefergebühr:</td>
+                                    <td>{{ "%.2f"|format(order.restaurant.delivery_fee) }} CHF</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Gesamtsumme:</strong></td>
+                                    <td><strong>{{ "%.2f"|format(order.total_amount) }} CHF</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Aktionen</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('restaurants.menu', restaurant_id=order.restaurant.id) }}" 
+                       class="btn btn-primary btn-block w-100 mb-2">
+                        Erneut bestellen
+                    </a>
+                    <a href="{{ url_for('orders.my_orders') }}" 
+                       class="btn btn-outline-secondary btn-block w-100">
+                        Zurück zu meinen Bestellungen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelector('.cancel-order-btn')?.addEventListener('click', async function() {
+        if (!confirm('Möchten Sie diese Bestellung wirklich stornieren?')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/orders/${this.dataset.orderId}/cancel`, {
+                method: 'POST'
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || 'Ein Fehler ist aufgetreten');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Ein Fehler ist aufgetreten');
+        }
+    });
+</script>
+{% endblock %}

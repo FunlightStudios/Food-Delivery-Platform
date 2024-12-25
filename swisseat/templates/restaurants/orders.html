@@ -1,0 +1,374 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div id="alertContainer"></div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Bestellungen</h1>
+        <div>
+            <a href="{{ url_for('restaurants.dashboard') }}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Zurück zum Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="orderTabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#current" data-bs-toggle="tab">
+                        Aktuelle Bestellungen
+                        {% if current_orders %}
+                        <span class="badge bg-primary ms-2">{{ current_orders|length }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#completed" data-bs-toggle="tab">
+                        Abgeschlossene Bestellungen
+                        {% if completed_orders %}
+                        <span class="badge bg-success ms-2">{{ completed_orders|length }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#cancelled" data-bs-toggle="tab">
+                        Stornierte Bestellungen
+                        {% if cancelled_orders %}
+                        <span class="badge bg-danger ms-2">{{ cancelled_orders|length }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <!-- Current Orders Tab -->
+                <div class="tab-pane fade show active" id="current">
+                    {% if current_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="text-center">#</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" class="text-end">Betrag</th>
+                                    <th scope="col" class="text-center">Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in current_orders %}
+                                <tr class="align-middle">
+                                    <td class="text-center fw-bold">#{{ order.id }}</td>
+                                    <td>
+                                        <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'confirmed' %}bg-info{% endif %}">
+                                            {% if order.status == 'pending' %}
+                                            Neu
+                                            {% elif order.status == 'confirmed' %}
+                                            Bestätigt
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td class="text-end">{{ "%.2f"|format(order.total_amount) }} CHF</td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="toggleOrderDetails('{{ order.id }}')">
+                                                <i class="fas fa-eye me-1"></i> Details
+                                            </button>
+                                            {% if order.status == 'pending' %}
+                                            <button type="button" class="btn btn-sm btn-success update-status" data-order-id="{{ order.id }}" data-status="confirmed">
+                                                <i class="fas fa-check me-1"></i> Bestätigen
+                                            </button>
+                                            {% elif order.status == 'confirmed' %}
+                                            <button type="button" class="btn btn-sm btn-success update-status" data-order-id="{{ order.id }}" data-status="delivered">
+                                                <i class="fas fa-truck me-1"></i> Geliefert
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="orderDetails{{ order.id }}" class="order-details" style="display: none;">
+                                    <td colspan="4">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <div class="row g-3 mb-3">
+                                                    <div class="col-md-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-user me-2 text-primary"></i>
+                                                            <div>
+                                                                <div class="fw-bold">{{ order.customer.username }}</div>
+                                                                <div class="text-muted small">Tel: {{ order.customer.phone or 'Keine Angabe' }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-map-marker-alt me-2 text-danger"></i>
+                                                            <div>
+                                                                <div>{{ order.delivery_address }}</div>
+                                                                <div class="text-muted small">Zahlungsmethode: {{ order.payment_method }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-clock me-2 text-info"></i>
+                                                            <div>
+                                                                <div>{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+                                                                <div class="text-muted small">
+                                                                    {% set minutes_ago = ((now - order.created_at).total_seconds() / 60)|int %}
+                                                                    {% if minutes_ago < 60 %}
+                                                                        vor {{ minutes_ago }} Minuten
+                                                                    {% else %}
+                                                                        vor {{ (minutes_ago / 60)|int }} Stunden
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-shopping-cart me-2 text-success"></i>
+                                                            <div>
+                                                                <div class="fw-bold">{{ "%.2f"|format(order.total_amount) }} CHF</div>
+                                                                <div class="text-muted small">{{ order.items|length }} Artikel</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Order Items Table -->
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover mb-0">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Artikel</th>
+                                                                <th class="text-center" style="width: 100px;">Anzahl</th>
+                                                                <th class="text-end" style="width: 120px;">Preis</th>
+                                                                <th class="text-end" style="width: 120px;">Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for item in order.items %}
+                                                            <tr>
+                                                                <td>{{ item.menu_item.name }}</td>
+                                                                <td class="text-center">{{ item.quantity }}</td>
+                                                                <td class="text-end">{{ "%.2f"|format(item.price_at_time) }} CHF</td>
+                                                                <td class="text-end">{{ "%.2f"|format(item.get_total()) }} CHF</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                        <tfoot class="table-light">
+                                                            <tr>
+                                                                <td colspan="3" class="text-end"><strong>Zwischensumme:</strong></td>
+                                                                <td class="text-end">{{ "%.2f"|format(order.total_amount - restaurant.delivery_fee) }} CHF</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="3" class="text-end"><strong>Liefergebühr:</strong></td>
+                                                                <td class="text-end">{{ "%.2f"|format(restaurant.delivery_fee) }} CHF</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="3" class="text-end"><strong>Gesamtbetrag:</strong></td>
+                                                                <td class="text-end"><strong>{{ "%.2f"|format(order.total_amount) }} CHF</strong></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Keine aktuellen Bestellungen vorhanden.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Completed Orders Tab -->
+                <div class="tab-pane fade" id="completed">
+                    {% if completed_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="text-center">#</th>
+                                    <th scope="col">Kunde</th>
+                                    <th scope="col">Lieferadresse</th>
+                                    <th scope="col">Bestelldatum</th>
+                                    <th scope="col">Lieferdatum</th>
+                                    <th scope="col" class="text-end">Betrag</th>
+                                    <th scope="col" class="text-center">Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in completed_orders %}
+                                <tr>
+                                    <td class="text-center fw-bold">#{{ order.id }}</td>
+                                    <td>{{ order.customer.username }}</td>
+                                    <td>{{ order.delivery_address }}</td>
+                                    <td>{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                                    <td>{{ order.delivered_at.strftime('%d.%m.%Y %H:%M') if order.delivered_at else '-' }}</td>
+                                    <td class="text-end">{{ "%.2f"|format(order.total_amount) }} CHF</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#orderModal{{ order.id }}">
+                                            <i class="fas fa-eye me-1"></i> Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-check-circle fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Keine abgeschlossenen Bestellungen vorhanden.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Cancelled Orders Tab -->
+                <div class="tab-pane fade" id="cancelled">
+                    {% if cancelled_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="text-center">#</th>
+                                    <th scope="col">Kunde</th>
+                                    <th scope="col">Lieferadresse</th>
+                                    <th scope="col">Bestelldatum</th>
+                                    <th scope="col">Stornierungsdatum</th>
+                                    <th scope="col" class="text-end">Betrag</th>
+                                    <th scope="col" class="text-center">Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in cancelled_orders %}
+                                <tr>
+                                    <td class="text-center fw-bold">#{{ order.id }}</td>
+                                    <td>{{ order.customer.username }}</td>
+                                    <td>{{ order.delivery_address }}</td>
+                                    <td>{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                                    <td>{{ order.cancelled_at.strftime('%d.%m.%Y %H:%M') if order.cancelled_at else '-' }}</td>
+                                    <td class="text-end">{{ "%.2f"|format(order.total_amount) }} CHF</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#orderModal{{ order.id }}">
+                                            <i class="fas fa-eye me-1"></i> Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-ban fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Keine stornierten Bestellungen vorhanden.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleOrderDetails(orderId) {
+    const detailsRow = document.getElementById('orderDetails' + orderId);
+    if (detailsRow.style.display === 'none') {
+        // Hide all other detail rows first
+        document.querySelectorAll('.order-details').forEach(row => {
+            row.style.display = 'none';
+        });
+        // Show this detail row
+        detailsRow.style.display = '';
+    } else {
+        detailsRow.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to show alert messages
+    function showAlert(message, type = 'success') {
+        const alertContainer = document.getElementById('alertContainer');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        alertContainer.appendChild(alert);
+        
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            alert.classList.remove('show');
+            setTimeout(() => alert.remove(), 150);
+        }, 5000);
+    }
+
+    // Handle status updates
+    document.querySelectorAll('.update-status').forEach(button => {
+        button.addEventListener('click', async function() {
+            const orderId = this.dataset.orderId;
+            const newStatus = this.dataset.status;
+            const button = this;
+            
+            try {
+                // Disable button and show loading state
+                button.disabled = true;
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Wird bearbeitet...';
+                
+                const response = await fetch(`/restaurant/orders/${orderId}/status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Show success message
+                    showAlert(
+                        `Bestellung erfolgreich ${newStatus === 'confirmed' ? 'bestätigt' : 'als geliefert markiert'}.`,
+                        'success'
+                    );
+                    
+                    // Close modal if open
+                    const modal = bootstrap.Modal.getInstance(document.querySelector(`#orderModal${orderId}`));
+                    if (modal) {
+                        modal.hide();
+                    }
+                    
+                    // Reload page after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'Ein Fehler ist aufgetreten');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // Show error message
+                showAlert(error.message || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.', 'danger');
+                
+                // Reset button state
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

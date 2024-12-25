@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Bestellungen</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {% if orders.items %}
+                {% for order in orders.items %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-0">Bestellung #{{ order.id }}</h5>
+                                    <small class="text-muted">
+                                        {{ order.order_date.strftime('%d.%m.%Y %H:%M') }}
+                                    </small>
+                                </div>
+                                <span class="badge bg-primary">{{ order.status }}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <h6>Kundeninformationen</h6>
+                                    <p class="mb-1">{{ order.customer.username }}</p>
+                                    <p class="mb-1">{{ order.delivery_address }}</p>
+                                    <p class="mb-0">Tel: {{ order.customer.phone }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Bestelldetails</h6>
+                                    <ul class="list-unstyled">
+                                        {% for item in order.items %}
+                                            <li>
+                                                {{ item.quantity }}x {{ item.menu_item.name }}
+                                                <span class="float-end">
+                                                    {{ "%.2f"|format(item.price * item.quantity) }} CHF
+                                                </span>
+                                            </li>
+                                        {% endfor %}
+                                        <li class="border-top mt-2 pt-2">
+                                            <strong>Gesamt:</strong>
+                                            <span class="float-end">
+                                                <strong>{{ "%.2f"|format(order.total_amount) }} CHF</strong>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="text-end">
+                                {% if order.status == 'pending' %}
+                                    <form action="{{ url_for('orders.update_order_status', order_id=order.id) }}" 
+                                          method="POST" 
+                                          class="d-inline">
+                                        <input type="hidden" name="status" value="accepted">
+                                        <button type="submit" class="btn btn-success">
+                                            Bestellung annehmen
+                                        </button>
+                                    </form>
+                                    <form action="{{ url_for('orders.update_order_status', order_id=order.id) }}" 
+                                          method="POST" 
+                                          class="d-inline">
+                                        <input type="hidden" name="status" value="rejected">
+                                        <button type="submit" class="btn btn-danger">
+                                            Bestellung ablehnen
+                                        </button>
+                                    </form>
+                                {% elif order.status == 'accepted' %}
+                                    <form action="{{ url_for('orders.update_order_status', order_id=order.id) }}" 
+                                          method="POST">
+                                        <input type="hidden" name="status" value="delivered">
+                                        <button type="submit" class="btn btn-primary">
+                                            Als geliefert markieren
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                {% if orders.pages > 1 %}
+                    <nav aria-label="Order navigation">
+                        <ul class="pagination justify-content-center">
+                            {% for page_num in orders.iter_pages() %}
+                                {% if page_num %}
+                                    <li class="page-item {% if page_num == orders.page %}active{% endif %}">
+                                        <a class="page-link" 
+                                           href="{{ url_for('admin.order_management', page=page_num) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info">
+                    Keine Bestellungen vorhanden.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

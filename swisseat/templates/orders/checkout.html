@@ -1,0 +1,183 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Bestellung abschließen</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Lieferadresse</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.address %}
+                        <p class="mb-0" id="delivery-address">{{ current_user.address }}</p>
+                        <small class="text-muted">
+                            <a href="{{ url_for('users.register') }}">Adresse ändern</a>
+                        </small>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            Bitte fügen Sie eine Lieferadresse in Ihrem 
+                            <a href="{{ url_for('users.register') }}">Profil</a> hinzu.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Zahlungsmethode</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {% if restaurant.accepts_cash %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input payment-method" type="radio" name="payment_method" 
+                                   id="payment-cash" value="cash" required>
+                            <label class="form-check-label" for="payment-cash">
+                                <i class="fas fa-money-bill-wave me-2"></i>Barzahlung
+                            </label>
+                        </div>
+                        {% endif %}
+                        
+                        {% if restaurant.accepts_twint %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input payment-method" type="radio" name="payment_method" 
+                                   id="payment-twint" value="twint" required>
+                            <label class="form-check-label" for="payment-twint">
+                                <i class="fas fa-mobile-alt me-2"></i>TWINT
+                            </label>
+                        </div>
+                        {% endif %}
+                        
+                        {% if restaurant.accepts_paypal %}
+                        <div class="form-check">
+                            <input class="form-check-input payment-method" type="radio" name="payment_method" 
+                                   id="payment-paypal" value="paypal" required>
+                            <label class="form-check-label" for="payment-paypal">
+                                <i class="fab fa-paypal me-2"></i>PayPal
+                            </label>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Bestellübersicht</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Artikel</th>
+                                    <th>Preis</th>
+                                    <th>Anzahl</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart.items %}
+                                <tr>
+                                    <td>{{ item.menu_item.name }}</td>
+                                    <td>{{ "%.2f"|format(item.price) }} CHF</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ "%.2f"|format(item.get_total()) }} CHF</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end">Zwischensumme:</td>
+                                    <td>{{ "%.2f"|format(cart.get_total()) }} CHF</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end">Liefergebühr:</td>
+                                    <td>{{ "%.2f"|format(restaurant.delivery_fee) }} CHF</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Gesamtsumme:</strong></td>
+                                    <td><strong>{{ "%.2f"|format(cart.get_total() + restaurant.delivery_fee) }} CHF</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ restaurant.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <i class="fas fa-clock"></i> Lieferzeit: ca. {{ restaurant.delivery_time }} Minuten
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-shopping-cart"></i> Mindestbestellwert: 
+                        CHF {{ "%.2f"|format(restaurant.minimum_order) }}
+                    </p>
+                    <p class="mb-3">
+                        <i class="fas fa-truck"></i> Liefergebühr: 
+                        CHF {{ "%.2f"|format(restaurant.delivery_fee) }}
+                    </p>
+
+                    <form method="POST">
+                        <input type="hidden" name="payment_method" id="selected-payment-method">
+                        <button type="submit" 
+                                class="btn btn-primary btn-lg btn-block w-100" 
+                                id="submit-order-btn"
+                                {% if not current_user.address %}disabled{% endif %}>
+                            Bestellung aufgeben
+                        </button>
+                    </form>
+
+                    <a href="{{ url_for('restaurants.menu', restaurant_id=restaurant.id) }}" 
+                       class="btn btn-outline-secondary btn-block w-100 mt-2">
+                        Zurück zum Menü
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentInputs = document.querySelectorAll('.payment-method');
+    const selectedPaymentInput = document.getElementById('selected-payment-method');
+    const submitBtn = document.getElementById('submit-order-btn');
+    
+    function updateSubmitButton() {
+        const hasPaymentMethod = document.querySelector('.payment-method:checked') !== null;
+        const hasAddress = document.getElementById('delivery-address') !== null;
+        
+        submitBtn.disabled = !hasPaymentMethod || !hasAddress;
+        
+        if (!hasAddress) {
+            submitBtn.title = 'Bitte fügen Sie zuerst eine Lieferadresse hinzu';
+        } else if (!hasPaymentMethod) {
+            submitBtn.title = 'Bitte wählen Sie eine Zahlungsmethode';
+        } else {
+            submitBtn.title = '';
+        }
+    }
+    
+    paymentInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            selectedPaymentInput.value = this.value;
+            updateSubmitButton();
+        });
+    });
+    
+    // Initial check
+    updateSubmitButton();
+});
+</script>
+{% endblock %}

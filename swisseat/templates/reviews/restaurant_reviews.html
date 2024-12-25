@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Bewertungen für {{ restaurant.name }}</h1>
+            <div class="restaurant-rating">
+                <span class="h2">{{ "%.1f"|format(restaurant.rating) }}</span>
+                <span class="text-warning h3">
+                    {% for i in range(5) %}
+                        {% if i < restaurant.rating|round(0, 'floor') %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                </span>
+                <span class="text-muted">({{ reviews.total }} Bewertungen)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            {% if reviews.items %}
+                {% for review in reviews.items %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="mb-1">{{ review.user.username }}</h5>
+                                    <div class="text-warning">
+                                        {% for i in range(5) %}
+                                            {% if i < review.rating %}
+                                                ★
+                                            {% else %}
+                                                ☆
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    {{ review.date_posted.strftime('%d.%m.%Y') }}
+                                </small>
+                            </div>
+                            <p class="mt-3 mb-0">{{ review.comment }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% if reviews.pages > 1 %}
+                    <nav aria-label="Review navigation">
+                        <ul class="pagination justify-content-center">
+                            {% for page_num in reviews.iter_pages() %}
+                                {% if page_num %}
+                                    <li class="page-item {% if page_num == reviews.page %}active{% endif %}">
+                                        <a class="page-link" 
+                                           href="{{ url_for('reviews.restaurant_reviews', 
+                                                          restaurant_id=restaurant.id, 
+                                                          page=page_num) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info">
+                    Dieses Restaurant hat noch keine Bewertungen.
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Bewertungsübersicht</h5>
+                    {% for stars in range(5, 0, -1) %}
+                        {% set count = reviews.items|selectattr('rating', 'eq', stars)|list|length %}
+                        {% set percentage = (count / reviews.total * 100) if reviews.total > 0 else 0 %}
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="text-warning" style="width: 70px">
+                                {% for i in range(stars) %}★{% endfor %}
+                                {% for i in range(5 - stars) %}☆{% endfor %}
+                            </div>
+                            <div class="progress flex-grow-1" style="height: 8px">
+                                <div class="progress-bar bg-warning" 
+                                     role="progressbar" 
+                                     style="width: {{ percentage }}%" 
+                                     aria-valuenow="{{ percentage }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100"></div>
+                            </div>
+                            <div class="ms-2" style="width: 40px">
+                                {{ count }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Restaurant-Info</h5>
+                    <p class="card-text">{{ restaurant.description }}</p>
+                    <a href="{{ url_for('restaurants.menu', restaurant_id=restaurant.id) }}" 
+                       class="btn btn-primary btn-block w-100">
+                        Zum Menü
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

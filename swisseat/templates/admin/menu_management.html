@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Menü-Verwaltung</h1>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('admin.new_menu_item') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Neues Gericht
+            </a>
+        </div>
+    </div>
+
+    {% for category, items in menu_items|groupby('category') %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">{{ category }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Beschreibung</th>
+                            <th>Preis</th>
+                            <th>Status</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ "%.2f"|format(item.price) }} CHF</td>
+                            <td>
+                                {% if item.is_available %}
+                                <span class="badge bg-success">Verfügbar</span>
+                                {% else %}
+                                <span class="badge bg-danger">Nicht verfügbar</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ url_for('admin.update_menu_item', item_id=item.id) }}" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-danger" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ item.id }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteModal{{ item.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Gericht löschen</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Möchten Sie das Gericht "{{ item.name }}" wirklich löschen?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" 
+                                                        class="btn btn-secondary" 
+                                                        data-bs-dismiss="modal">Abbrechen</button>
+                                                <form action="{{ url_for('admin.delete_menu_item', item_id=item.id) }}" 
+                                                      method="POST" 
+                                                      class="d-inline">
+                                                    <input type="submit" 
+                                                           class="btn btn-danger" 
+                                                           value="Löschen">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

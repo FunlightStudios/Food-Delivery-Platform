@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1>Suchergebnisse</h1>
+                {% if query or cuisine %}
+                    <p>
+                        {% if query %}Suche nach: "{{ query }}"{% endif %}
+                        {% if cuisine %}• Küche: {{ cuisine }}{% endif %}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <form method="GET" action="{{ url_for('restaurants.search') }}" class="form-inline">
+                    <input type="text" name="q" class="form-control mr-2" placeholder="Suche nach Restaurants..." value="{{ query }}">
+                    <select name="cuisine" class="form-control mr-2">
+                        <option value="">Alle Küchen</option>
+                        <option value="italienisch" {% if cuisine == 'italienisch' %}selected{% endif %}>Italienisch</option>
+                        <option value="asiatisch" {% if cuisine == 'asiatisch' %}selected{% endif %}>Asiatisch</option>
+                        <option value="amerikanisch" {% if cuisine == 'amerikanisch' %}selected{% endif %}>Amerikanisch</option>
+                        <option value="indisch" {% if cuisine == 'indisch' %}selected{% endif %}>Indisch</option>
+                        <option value="schweizerisch" {% if cuisine == 'schweizerisch' %}selected{% endif %}>Schweizerisch</option>
+                        <option value="vegetarisch" {% if cuisine == 'vegetarisch' %}selected{% endif %}>Vegetarisch</option>
+                        <option value="vegan" {% if cuisine == 'vegan' %}selected{% endif %}>Vegan</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Suchen</button>
+                </form>
+            </div>
+        </div>
+
+        {% if restaurants %}
+            <div class="row">
+                {% for restaurant in restaurants %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="{{ url_for('static', filename='img/restaurants/' + restaurant.id|string + '.jpg') }}" 
+                                 class="card-img-top" alt="{{ restaurant.name }}"
+                                 onerror="this.src='{{ url_for('static', filename='img/default-restaurant.jpg') }}'">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ restaurant.name }}</h5>
+                                <p class="card-text">{{ restaurant.description[:100] }}...</p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        {{ restaurant.cuisine_type }} • {{ restaurant.delivery_time }} Min. Lieferzeit
+                                    </small>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="rating">
+                                        <span class="text-warning">★</span>
+                                        <span>{{ "%.1f"|format(restaurant.rating) }}</span>
+                                    </div>
+                                    <small class="text-muted">Min. Bestellung: CHF {{ "%.2f"|format(restaurant.minimum_order) }}</small>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('restaurants.menu', restaurant_id=restaurant.id) }}" 
+                                   class="btn btn-primary btn-block">Zum Menü</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Keine Restaurants gefunden. Bitte versuchen Sie es mit anderen Suchkriterien.
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

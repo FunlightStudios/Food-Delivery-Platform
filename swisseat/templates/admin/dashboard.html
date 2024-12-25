@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Restaurant Dashboard</h1>
+    
+    <!-- Statistik-Karten -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Bestellungen (30 Tage)</h5>
+                    <p class="card-text display-4">{{ total_orders }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Umsatz (30 Tage)</h5>
+                    <p class="card-text display-4">{{ "%.2f"|format(total_revenue) }} CHF</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Durchschnittlicher Bestellwert</h5>
+                    <p class="card-text display-4">{{ "%.2f"|format(avg_order_value) }} CHF</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Beliebteste Gerichte -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Beliebteste Gerichte</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Gericht</th>
+                                    <th>Anzahl Bestellungen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item, total in popular_items %}
+                                <tr>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ total }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Aktuelle Bestellungen -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Aktuelle Bestellungen</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Bestellung #</th>
+                                    <th>Zeit</th>
+                                    <th>Status</th>
+                                    <th>Betrag</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in current_orders %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.created_at.strftime('%H:%M') }}</td>
+                                    <td>
+                                        <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'completed' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ order.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ "%.2f"|format(order.get_total()) }} CHF</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schnellzugriff -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-end">
+                <a href="{{ url_for('admin.update_restaurant') }}" class="btn btn-primary me-2">
+                    Restaurant bearbeiten
+                </a>
+                <a href="{{ url_for('admin.menu_management') }}" class="btn btn-success">
+                    Speisekarte verwalten
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

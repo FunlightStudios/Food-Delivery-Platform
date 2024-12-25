@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="restaurant-header mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="{{ url_for('static', filename='img/restaurants/' + restaurant.id|string + '.svg') }}" 
+                     class="img-fluid rounded" alt="{{ restaurant.name }}"
+                     onerror="this.src='{{ url_for('static', filename='img/default-restaurant.svg') }}'">
+            </div>
+            <div class="col-md-8">
+                <h1>{{ restaurant.name }}</h1>
+                <p class="lead">{{ restaurant.description }}</p>
+                <div class="restaurant-info">
+                    <p>
+                        <i class="fas fa-utensils"></i> {{ restaurant.cuisine_type }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-star text-warning"></i> {{ "%.1f"|format(restaurant.rating) }}
+                    </p>
+                    <p>
+                        <i class="fas fa-clock"></i> {{ restaurant.delivery_time }} Min. Lieferzeit
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-truck"></i> CHF {{ "%.2f"|format(restaurant.delivery_fee) }} Liefergebühr
+                    </p>
+                    <p>
+                        <i class="fas fa-shopping-cart"></i> Min. Bestellung: CHF {{ "%.2f"|format(restaurant.minimum_order) }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-items">
+        {% set categories = menu_items|groupby('category') %}
+        
+        <ul class="nav nav-tabs mb-4" id="menuTab" role="tablist">
+            {% for category, items in categories %}
+            <li class="nav-item">
+                <a class="nav-link {% if loop.first %}active{% endif %}" 
+                   id="{{ category|lower }}-tab" 
+                   data-bs-toggle="tab" 
+                   href="#{{ category|lower }}" 
+                   role="tab">{{ category }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content" id="menuTabContent">
+            {% for category, items in categories %}
+            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" 
+                 id="{{ category|lower }}" 
+                 role="tabpanel">
+                
+                <div class="row">
+                    {% for item in items %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <img src="{{ url_for('static', filename='img/menu-items/default.svg') }}" 
+                                 class="card-img-top" alt="{{ item.name }}"
+                                 style="height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">{{ item.name }}</h5>
+                                    <h5 class="card-title text-primary">CHF {{ "%.2f"|format(item.price) }}</h5>
+                                </div>
+                                <p class="card-text">{{ item.description }}</p>
+                                {% if item.is_available %}
+                                <button class="btn btn-primary add-to-cart" 
+                                        data-item-id="{{ item.id }}"
+                                        data-item-name="{{ item.name }}"
+                                        data-item-price="{{ item.price }}">
+                                    In den Warenkorb
+                                </button>
+                                {% else %}
+                                <button class="btn btn-secondary" disabled>Nicht verfügbar</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Shopping Cart Modal -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartModalLabel">Warenkorb</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="cart-items"></div>
+                <div class="d-flex justify-content-between mt-3">
+                    <h5>Total:</h5>
+                    <h5 id="cart-total">CHF 0.00</h5>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Weiter bestellen</button>
+                <button type="button" class="btn btn-primary" id="checkout-btn">Zur Kasse</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            
+            // Sende POST-Request an Backend
+            fetch(`/cart/add/${itemId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'quantity=1'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "{{ url_for('cart.view_cart') }}";
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+            });
+        });
+    });
+</script>
+{% endblock %}

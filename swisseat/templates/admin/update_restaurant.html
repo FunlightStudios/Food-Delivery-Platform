@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1>Restaurant-Informationen aktualisieren</h1>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.address.label(class="form-label") }}
+                            {{ form.address(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.cuisine_type.label(class="form-label") }}
+                            {{ form.cuisine_type(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.delivery_time.label(class="form-label") }}
+                            {{ form.delivery_time(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.minimum_order.label(class="form-label") }}
+                            <div class="input-group">
+                                {{ form.minimum_order(class="form-control") }}
+                                <span class="input-group-text">CHF</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.delivery_fee.label(class="form-label") }}
+                            <div class="input-group">
+                                {{ form.delivery_fee(class="form-control") }}
+                                <span class="input-group-text">CHF</span>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Zahlungsmethoden</h5>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.accepts_cash(class="form-check-input") }}
+                                {{ form.accepts_cash.label(class="form-check-label") }}
+                            </div>
+                            <div class="form-check">
+                                {{ form.accepts_twint(class="form-check-input") }}
+                                {{ form.accepts_twint.label(class="form-check-label") }}
+                            </div>
+                            <div class="form-check">
+                                {{ form.accepts_paypal(class="form-check-input") }}
+                                {{ form.accepts_paypal.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Speichern</button>
+                        <a href="{{ url_for('admin.restaurant_dashboard') }}" class="btn btn-secondary">Abbrechen</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

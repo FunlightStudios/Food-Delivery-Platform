@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Meine Bestellungen</h1>
+    
+    {% if orders.items %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Bestellung #</th>
+                        <th>Restaurant</th>
+                        <th>Datum</th>
+                        <th>Status</th>
+                        <th>Betrag</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders.items %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.restaurant.name }}</td>
+                        <td>{{ order.date_ordered.strftime('%d.%m.%Y %H:%M') }}</td>
+                        <td>
+                            <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'completed' %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ order.status }}
+                            </span>
+                        </td>
+                        <td>{{ "%.2f"|format(order.total_amount) }} CHF</td>
+                        <td>
+                            <a href="{{ url_for('orders.order_details', order_id=order.id) }}" class="btn btn-sm btn-primary">Details</a>
+                            {% if order.status == 'completed' and not order.review %}
+                            <a href="{{ url_for('reviews.create_review', order_id=order.id) }}" class="btn btn-sm btn-success">Bewerten</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if orders.pages > 1 %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if orders.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('orders.my_orders', page=orders.prev_num) }}">Zurück</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in orders.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == orders.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('orders.my_orders', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if orders.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('orders.my_orders', page=orders.next_num) }}">Weiter</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Sie haben noch keine Bestellungen aufgegeben.
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.cancel-order-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            if (!confirm('Möchten Sie diese Bestellung wirklich stornieren?')) {
+                return;
+            }
+
+            const orderId = this.dataset.orderId;
+            try {
+                const response = await fetch(`/orders/${orderId}/cancel`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+            }
+        });
+    });
+</script>
+{% endblock %}
