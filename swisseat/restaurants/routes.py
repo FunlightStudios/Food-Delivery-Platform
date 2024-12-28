@@ -148,32 +148,6 @@ def register():
         return redirect(url_for('restaurants.dashboard'))
     return render_template('restaurants/register.html', title='Restaurant registrieren', form=form)
 
-@restaurants.route("/restaurant/menu/new", methods=['GET', 'POST'])
-@login_required
-def add_menu_item():
-    if not current_user.is_restaurant_owner():
-        flash('Sie haben keine Berechtigung für diese Seite.', 'danger')
-        return redirect(url_for('main.home'))
-    
-    restaurant = Restaurant.query.filter_by(owner_id=current_user.id).first()
-    if not restaurant:
-        flash('Sie haben noch kein Restaurant registriert.', 'warning')
-        return redirect(url_for('restaurants.register'))
-    
-    form = MenuItemForm()
-    if form.validate_on_submit():
-        menu_item = MenuItem(
-            name=form.name.data,
-            description=form.description.data,
-            price=form.price.data,
-            category=form.category.data,
-            restaurant_id=restaurant.id
-        )
-        db.session.add(menu_item)
-        db.session.commit()
-        flash('Menüeintrag wurde erfolgreich hinzugefügt!', 'success')
-        return redirect(url_for('restaurants.menu', restaurant_id=restaurant.id))
-    return render_template('restaurants/add_menu_item.html', form=form)
 
 @restaurants.route("/restaurant/edit", methods=['GET', 'POST'])
 @login_required

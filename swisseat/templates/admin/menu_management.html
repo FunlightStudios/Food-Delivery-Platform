@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container">
+<div class="spacer"></div>
+<div class="menu-management container">
     <div class="row mb-4">
         <div class="col">
             <h1>Menü-Verwaltung</h1>
@@ -20,7 +21,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table">
-                    <thead>
+                    <thead class="table-head">
                         <tr>
                             <th>Name</th>
                             <th>Beschreibung</th>
@@ -29,7 +30,7 @@
                             <th>Aktionen</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-body">
                         {% for item in items %}
                         <tr>
                             <td>{{ item.name }}</td>

@@ -1,10 +1,26 @@
-/* Allgemeine Stile */
+/* Global Styles */
 body {
     background-color: #121212;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: #fdfdfd;
 }
+
+.custom-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
 
 /* Header */
 .navbar {
@@ -16,6 +32,15 @@ body {
     font-weight: bold;
     color: #ffffff !important;
 }
+
+
+
+
+
+
+
+
+
 
 /* Hero Section */
 .hero-section {
@@ -31,6 +56,17 @@ body {
 .hero-section .lead {
     color: #34495e;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /* Cards */
 .card {
@@ -48,6 +84,19 @@ body {
     font-weight: 600;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Buttons */
 .btn-primary {
     background-color: #ff4323;
@@ -58,6 +107,16 @@ body {
     background-color: #ff623e;
     border-color: #ff623e;
 }
+
+
+
+
+
+
+
+
+
+
 
 /* Footer */
 footer {
@@ -133,6 +192,9 @@ footer .text-center a:hover {
     color: #FF0000;
 }
 
+
+
+
 /* Features Section */
 .features i {
     color: #d6d6d6;
@@ -143,10 +205,14 @@ footer .text-center a:hover {
     margin-top: 1rem;
 }
 
+
+
 /* Ratings */
 .rating .text-warning {
     color: #f1c40f !important;
 }
+
+
 
 /* Forms */
 .form-control:focus {
@@ -154,11 +220,18 @@ footer .text-center a:hover {
     box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
 }
 
+
+
+
+
 /* Alerts */
 .alert {
     border-radius: 4px;
     transition: opacity 0.5s ease-in-out;
 }
+
+
+
 
 /* Responsive Images */
 .card-img-top {
@@ -166,16 +239,33 @@ footer .text-center a:hover {
     object-fit: cover;
 }
 
+
+
+
+
 /* Loading Spinner */
 .spinner-border {
     color: #FF0000;
 }
+
+
+
+
+
 
 /* Modal */
 .modal-content {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
+
+
+
+
+
+
+
+
 
 /* Search Container */
 .search-container {
@@ -194,10 +284,35 @@ footer .text-center a:hover {
     padding: 15px 30px;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Home Page */
+.homepage {
+    width: 100%;
+    max-width: 68%;
+    justify-content: center;
+    margin: 0 auto;
+    min-height: 47.8vh;
+}
 .featured-restaurants {
     margin-left: 50px;
-    margin-right: 10px;
+
 }
 
 .features {
@@ -227,6 +342,18 @@ footer .text-center a:hover {
 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 /* Restaurant Status Switch */
 .form-check-input {
     width: 3em !important;
@@ -251,6 +378,15 @@ footer .text-center a:hover {
     font-size: 1.1em;
 }
 
+
+
+
+
+
+
+
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero-section {
@@ -262,15 +398,118 @@ footer .text-center a:hover {
     }
 }
 
+
+
+
+
+
+
+
+
+
+.spacer {
+    width: 100%;
+    min-height: 45px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Menu Management */
+.menu-management {
+    margin-top: 50px;
+    max-width: 68%;
+    justify-content: center;
+    margin: 0 auto;
+    min-height: 47.8vh;
+}
+
+.menu-management .card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.menu-management .card-header {
+    background-color: #3f3f3f;
+    border-bottom: 1px solid #2c2c2c;
+}
+
+.menu-management .card-body {
+    background-color: #282828;
+}
+
+.menu-management .table-head {
+    background-color: #3f3f3f;
+    color: #dddfeb !important;
+}
+
+.menu-management .table-body {
+    color: #dddfeb !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Text Colors */
+.text-gray {
+    color: #dddfeb !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Dashboard Styles */
+.dashboard {
+    margin-top: 50px;
+    max-width: 68%;
+    justify-content: center;
+    margin: 0 auto;
+}
+
 .dashboard .card {
     border: none;
     box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
 }
 
 .dashboard .card-header {
-    background-color: #f8f9fc;
-    border-bottom: 1px solid #e3e6f0;
+    background-color: #3f3f3f;
+    border-bottom: 1px solid #2c2c2c;
 }
 
 .dashboard .font-weight-bold {
@@ -295,6 +534,15 @@ footer .text-center a:hover {
 
 .dashboard .border-left-warning {
     border-left: 0.25rem solid #f6c23e !important;
+}
+
+.dashboard .table-head {
+    background-color: #3f3f3f;
+    color: #dddfeb !important;
+}
+
+.dashboard .table-body {
+    color: #dddfeb !important;
 }
 
 .dashboard .text-gray-300 {
@@ -352,6 +600,16 @@ footer .text-center a:hover {
     color: #dddfeb;
     margin-bottom: 1rem;
 }
+
+
+
+
+
+
+
+
+
+
 
 
 /* Login & Registration Page */
@@ -462,4 +720,102 @@ footer .text-center a:hover {
 
 .social div:hover {
     background-color: rgba(255, 255, 255, 0.47);
+}
+
+
+
+
+
+
+
+
+
+
+/* Restaurant Styles / Menu */
+.menu {
+    max-width: 68%;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+.restaurant-header {
+    margin-top: 50px;
+
+    margin-bottom: 20px;
+}
+
+.restaurant-header h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.restaurant-header img {
+    margin-top: 5px;
+    height: auto;
+}
+
+
+.restaurant-list {
+    margin-top: 50px;
+    max-width: 68%;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.menu-items {
+
+}
+
+.menu-items .card {
+    max-width: 800px;
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.menu-items .card-body {
+    background-color: #282828;
+}
+
+
+
+
+
+
+
+
+
+.profile {
+    margin-top: 50px;
+    max-width: 68%;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+
+
+
+
+
+
+/* Cart */
+.cart {
+    margin-top: 50px;
+    max-width: 68%;
+    justify-content: center;
+    margin: 0 auto;
+    color: #dddfeb !important;
+}
+
+.cart .card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.cart .card-header {
+    background-color: #3f3f3f;
+    border-bottom: 1px solid #2c2c2c;
+}
+
+.cart .card-body {
+    background-color: #282828;
 }
