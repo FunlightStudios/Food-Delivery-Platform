@@ -63,7 +63,8 @@ flask db upgrade
 flask run
 ```
 
-The application will be available at `http://localhost:5000`
+The application will be available at `http://localhost:80`
+You can Change the Applications Port and Debug-Mode in `run.py`
 
 ## Demo Accounts
 You can log in with the following credentials
