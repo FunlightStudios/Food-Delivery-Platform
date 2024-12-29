@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content-section">
-        <form method="POST" action="">
+    <div class="spacer"></div>
+    <div class="registration-page">
+        <form class="registration-form" method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Registrierung</legend>
@@ -59,10 +60,12 @@
                 </div>
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
+                {{ form.submit(class="registration-button btn btn-outline-danger") }}
             </div>
         </form>
-        <div class="border-top pt-3">
+      </div> 
+    <div class="custom-center"> 
+        <div class=" pt-3">
             <small class="text-muted">
                 Bereits einen Account? <a class="ml-2" href="{{ url_for('users.login') }}">Login</a>
             </small>
@@ -73,4 +76,5 @@
             </small>
         </div>
     </div>
+    
 {% endblock content %}

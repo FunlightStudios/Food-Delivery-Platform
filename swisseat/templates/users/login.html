@@ -1,9 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="background">
-    <div class="shape"></div>
-    <div class="shape"></div>
-</div>
+<div class="spacer"></div>
 <div class="login-page">
     <form class="login-form" method="POST" action="">
         {{ form.hidden_tag() }}
@@ -37,7 +34,7 @@
 
         <div class="social">
             <div class="go"><i class="fab fa-google"></i> Google</div>
-            <div class="fb"><i class="fab fa-facebook"></i> Facebook</div>
+            <div class="fb"><i class="fab fa-apple"></i>  Apple ID</div>
         </div>
 
         <div class="border-top pt-3">
@@ -47,4 +44,5 @@
         </div>
     </form>
 </div>
+<div class="spacer"></div>
 {% endblock content %}

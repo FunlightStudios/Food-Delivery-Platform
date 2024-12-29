@@ -12,3 +12,15 @@ def home():
 @main.route('/about')
 def about():
     return render_template('about.html', title='Über uns')
+
+@main.route("/impressum")
+def impressum():
+    return render_template('impressum.html')
+
+@main.route("/privacy")
+def privacy():
+    return render_template('privacy.html')
+
+@main.route("/partner")
+def partner():
+    return render_template('partner.html')

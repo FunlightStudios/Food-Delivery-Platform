@@ -29,7 +29,7 @@
                         <ul class="list-unstyled">
                             <li><a href="{{ url_for('users.register_restaurant') }}">Als Restaurant registrieren</a></li>
                             <li><a href="{{ url_for('users.login') }}">Restaurant Login</a></li>
-                            <li><a href="#">Partner werden</a></li>
+                            <li><a href="{{ url_for('main.partner') }}">Partner werden</a></li>
                         </ul>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
         <hr>
         <div class="text-center">
             <p class="mb-0">&copy; 2024 SwissEat. Alle Rechte vorbehalten. <br>
-                <a href="#">Impressum</a> | <a href="#">Datenschutz</a></p>
+                <a href="{{ url_for('main.impressum') }}">Impressum</a> | <a href="{{ url_for('main.privacy') }}">Datenschutz</a></p>
         </div>
     </div>
 </footer>
