@@ -5,8 +5,8 @@ SwissEat is a sleek and modern food delivery platform built with Flask, designed
 # ⚠️ Work in Progress
 This project is under active development and not production-ready yet. (Project in German)
 
-![Home](screenshot.png)
-![Restaurant Dashboard](screenshot1.png)
+![Home](screenshot1.png)
+![Restaurant Dashboard](screenshot2.png)
 ![Login](screenshot3.png)
 ![User Registration](screenshot4.png)
 
