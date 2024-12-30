@@ -40,7 +40,7 @@ This project is under active development and not production-ready yet. (Project 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/SwissEat.git
+git clone https://github.com/FunlightStudios/SwissEat.git
 cd SwissEat
 ```
 
@@ -65,18 +65,20 @@ flask db upgrade
 flask run
 ```
 
-The application will be available at `http://localhost:5000`
+The application will be available at `http://localhost:80`
+
+You can change the Port and Debug Mode in `run.py`
 
 ## Demo Accounts
 You can log in with the following credentials
 
 # User Demo
 - Username: `user@example.com`
-- Password: `password` 
+- Password: `password`
 
 # Restaurant Owner Demo
 - Username: `owner@example.com`
-- Password: `password` 
+- Password: `password`
 
 - Username: `owner1@example.com`
 - Password: `password`
