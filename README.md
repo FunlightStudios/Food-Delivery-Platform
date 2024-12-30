@@ -7,6 +7,8 @@ This project is under active development and not production-ready yet. (Project 
 
 ![Home](screenshot.png)
 ![Restaurant Dashboard](screenshot1.png)
+![Login](screenshot3.png)
+![User Registration](screenshot4.png)
 
 ## Features
 

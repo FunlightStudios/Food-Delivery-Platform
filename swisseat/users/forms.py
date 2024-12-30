@@ -30,6 +30,8 @@ class RestaurantRegistrationForm(FlaskForm):
     email = StringField('E-Mail',
                        validators=[DataRequired(), Email()])
     phone = StringField('Telefon',
+                       validators=[DataRequired(), Length(min=12, max=12)])
+    address = StringField('Adresse',
                        validators=[DataRequired(), Length(min=10, max=20)])
     password = PasswordField('Passwort', validators=[DataRequired()])
     confirm_password = PasswordField('Passwort bestätigen',

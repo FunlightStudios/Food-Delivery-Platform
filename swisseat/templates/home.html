@@ -10,7 +10,7 @@
             align-items: center; 
             justify-content: center;
             position: relative;">
-    <div style="background: rgba(248, 248, 248, 0.9); 
+    <div style="background: #21222d; 
                 padding: 2rem; 
                 border-radius: 10px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -19,7 +19,7 @@
         <div class="search-container my-4">
             <form class="d-flex justify-content-center" method="GET" action="{{ url_for('restaurants.search') }}">
                 <div class="input-group mb-3" style="max-width: 600px;">
-                    <input type="text" class="form-control" name="q" placeholder="Suchen Sie nach Restaurants oder Gerichten...">
+                    <input type="text" class="search-bar form-control" name="q" placeholder="Suchen Sie nach Restaurants oder Gerichten...">
                     <button class="btn btn-primary" type="submit">Suchen</button>
                 </div>
             </form>
@@ -28,7 +28,7 @@
 </div>
 <div class="homepage">
 <section class="featured-restaurants mb-5">
-    <h2 class="mb-4">Beliebte Restaurants</h2>
+    <h2 class="mb-4">Beliebte Restaurants in Ihrer Nähe</h2>
     <div class="row">
         {% for restaurant in restaurants %}
         <div class="col-md-4 mb-4">

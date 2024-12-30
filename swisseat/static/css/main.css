@@ -1,6 +1,6 @@
 /* Global Styles */
 body {
-    background-color: #121212;
+    background-color: #252735;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: #fdfdfd;
@@ -38,7 +38,7 @@ a:hover {
 /* Header */
 .navbar {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background-color: #1a1a1a;
+    background-color: #21222d;
 }
 
 .navbar-brand {
@@ -62,12 +62,20 @@ a:hover {
 }
 
 .hero-section h1 {
-    color: #2c3e50;
+    color: #f0f0f0;
     font-weight: 600;
 }
 
 .hero-section .lead {
-    color: #34495e;
+    color: #b6b6b6;
+}
+
+.hero-section .search-bar {
+    background-color: #23242f;
+}
+
+.hero-section .search-bar:hover {
+    background-color: #2c3e50;
 }
 
 
@@ -78,14 +86,11 @@ a:hover {
 
 
 
-
-
-
-/* Cards */
+/* Cards Overall */
 .card {
-    background-color: #282828;
+    background-color: #21222d;
     transition: transform 0.2s ease-in-out;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.15);
 }
 
 .card:hover {
@@ -136,7 +141,7 @@ footer {
     bottom: 0;
     justify-content: center;
     width: 100%;
-    background-color: #1a1a1a;
+    background-color: #21222d;
     color: #ecf0f1;
     padding: 2rem 0;
     margin-top: 3rem;
@@ -341,7 +346,7 @@ footer .text-center a:hover {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #282828;
+    background-color: #21222d;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 
@@ -463,12 +468,12 @@ footer .text-center a:hover {
 }
 
 .menu-management .card-header {
-    background-color: #3f3f3f;
+    background-color: #21222d;
     border-bottom: 1px solid #2c2c2c;
 }
 
 .menu-management .card-body {
-    background-color: #282828;
+    background-color: #21222d;
 }
 
 .menu-management .table-head {
@@ -525,12 +530,17 @@ footer .text-center a:hover {
 
 .dashboard .card {
     border: none;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+    background-color: #21222d;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15) !important;
 }
 
 .dashboard .card-header {
-    background-color: #3f3f3f;
+    background-color: #21222d;
     border-bottom: 1px solid #2c2c2c;
+}
+
+.dashboard .card-body {
+    background-color: #21222d;
 }
 
 .dashboard .font-weight-bold {
@@ -696,7 +706,7 @@ footer .text-center a:hover {
 .login-button {
     margin-top: 50px;
     width: 100%;
-    background-color: #0e0e0e;
+    background-color: rgba(0,0, 0, 0.0);
     color: #fcfcfc;
     padding: 15px 0;
     font-size: 18px;
@@ -759,7 +769,7 @@ footer .text-center a:hover {
 
 .registration-form label {
     display: block;
-    margin-top: 30px;
+    margin-top: 5px;
     font-size: 16px;
     font-weight: 500;
 }
@@ -789,24 +799,83 @@ footer .text-center a:hover {
     cursor: pointer;
 }
 
-.social {
-    margin-top: 30px;
+
+
+
+
+.restaurant-registration-page {
+    width: 100%;
+    max-width: 68%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
 }
 
-.social div {
-    background-color: rgba(255, 255, 255, 0.27);
-    color: #eaf0fb;
+.restaurant-registration-form .left-column {
+    margin-right: 20px;
+    max-width: 50%;
+}
+
+.restaurant-registration-form .right-column {
+    align-items: right;
+    margin-left: 20px;
+    max-width: 50%;
+}
+
+.restaurant-registration-form {
+    height: 620px;
+    width: 800px;
+    background-color: rgba(255, 255, 255, 0.13);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    padding: 50px 35px;
+    color: white;
+}
+
+.restaurant-registration-form h3 {
+    font-size: 32px;
+    font-weight: 500;
     text-align: center;
-    padding: 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    width: 48%;
 }
 
-.social div:hover {
-    background-color: rgba(255, 255, 255, 0.47);
+.restaurant-registration-form label {
+    display: block;
+    margin-top: 5px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.restaurant-registration-form input {
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    color: #e5e5e5;
+}
+
+.restaurant-registration-form legend {
+    text-align: center;
+    margin-top: -40px;
+}
+
+.restaurant-registration-button {
+    margin-top: 50px;
+    width: 100%;
+    background-color: #0e0e0e;
+    color: #fcfcfc;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 
