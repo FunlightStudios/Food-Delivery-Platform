@@ -40,7 +40,7 @@ This project is under active development and not production-ready yet. (Project 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/FunlightStudios/SwissEat.git
+git clone https://github.com/FunlightStudios/Food-Delivery-Platform.git
 cd SwissEat
 ```
 
