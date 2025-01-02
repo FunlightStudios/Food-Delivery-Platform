@@ -72,11 +72,11 @@ You can change the Port and Debug Mode in `run.py`
 ## Demo Accounts
 You can log in with the following credentials
 
-# User Demo
+### User Demo
 - Username: `user@example.com`
 - Password: `password`
 
-# Restaurant Owner Demo
+### Restaurant Owner Demo
 - Username: `owner@example.com`
 - Password: `password`
 
