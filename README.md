@@ -5,8 +5,8 @@ SwissEat is a sleek and modern food delivery platform built with Flask, designed
 # ⚠️ Work in Progress
 This project is under active development and not production-ready yet. (Project in German)
 
-![Home](screenshot1.png)
-![Restaurant Dashboard](screenshot2.png)
+![Home](screenshot01.png)
+![Restaurant Dashboard](screenshot02.png)
 ![Login](screenshot3.png)
 ![User Registration](screenshot4.png)
 
@@ -40,8 +40,8 @@ This project is under active development and not production-ready yet. (Project 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/FunlightStudios/SwissEat.git
-cd SwissEat
+git clone https://github.com/FunlightStudios/Food-Delivery-Platform.git
+cd Food-Delivery-Platform
 ```
 
 2. Create a virtual environment:
@@ -72,11 +72,11 @@ You can change the Port and Debug Mode in `run.py`
 ## Demo Accounts
 You can log in with the following credentials
 
-# User Demo
+### User Demo
 - Username: `user@example.com`
 - Password: `password`
 
-# Restaurant Owner Demo
+### Restaurant Owner Demo
 - Username: `owner@example.com`
 - Password: `password`
 
