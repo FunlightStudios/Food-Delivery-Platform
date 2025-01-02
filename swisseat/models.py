@@ -34,7 +34,7 @@ class Restaurant(db.Model):
     rating = db.Column(db.Float, default=0.0)
     delivery_time = db.Column(db.Integer, nullable=False)  # in minutes
     minimum_order = db.Column(db.Float, nullable=False)  # in CHF
-    delivery_fee = db.Column(db.Float, nullable=False)  # in CHF
+    delivery_fee = db.Column(db.Float, nullable=False, default=0)  # in CHF
     accepts_cash = db.Column(db.Boolean, nullable=False, default=True)
     accepts_twint = db.Column(db.Boolean, nullable=False, default=True)
     accepts_paypal = db.Column(db.Boolean, nullable=False, default=True)
@@ -69,6 +69,7 @@ class Order(db.Model):
     delivery_address = db.Column(db.String(200), nullable=False)
     total_amount = db.Column(db.Float, nullable=False)  # Total amount including delivery fee
     payment_method = db.Column(db.String(20), nullable=False)  # cash, twint, paypal
+    date_ordered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     items = db.relationship('OrderItem', backref='order_ref', lazy=True)
     
     def get_total(self):

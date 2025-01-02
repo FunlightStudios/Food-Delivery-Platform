@@ -30,15 +30,15 @@ class RestaurantForm(FlaskForm):
                                  ('indisch', 'Indisch'),
                                  ('schweizerisch', 'Schweizerisch'),
                                  ('vegetarisch', 'Vegetarisch'),
-                                 ('vegan', 'Vegan')
+                                 ('vegan', 'Vegan',)
                              ],
                              validators=[DataRequired()])
     delivery_time = IntegerField('Lieferzeit (Minuten)', 
                                 validators=[DataRequired(), NumberRange(min=1, max=120)])
     minimum_order = FloatField('Mindestbestellwert (CHF)', 
-                              validators=[DataRequired(), NumberRange(min=0)])
+                              validators=[NumberRange(min=0, max=100)])
     delivery_fee = FloatField('Liefergebühr (CHF)', 
-                             validators=[DataRequired(), NumberRange(min=0)])
+                             validators=[NumberRange(min=0, max=50)])
     accepts_cash = BooleanField('Barzahlung akzeptieren')
     accepts_twint = BooleanField('TWINT akzeptieren')
     accepts_paypal = BooleanField('PayPal akzeptieren')

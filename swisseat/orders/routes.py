@@ -6,6 +6,8 @@ from datetime import datetime
 
 orders = Blueprint('orders', __name__)
 
+current_date = datetime.utcnow()
+
 @orders.route("/orders/checkout/<int:restaurant_id>", methods=['GET', 'POST'])
 @login_required
 def checkout(restaurant_id):
@@ -48,6 +50,7 @@ def checkout(restaurant_id):
                 total_amount=total_amount + restaurant.delivery_fee,
                 delivery_address=current_user.address,
                 payment_method=payment_method,
+                date_ordered=current_date,
                 status='pending'
             )
             db.session.add(order)

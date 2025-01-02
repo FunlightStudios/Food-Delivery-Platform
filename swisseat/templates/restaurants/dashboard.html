@@ -7,9 +7,15 @@
             <h1 class="mb-0">{{ restaurant.name }}</h1>
             <p class="text-muted">{{ restaurant.cuisine_type }}</p>
         </div>
-        <div class="form-check form-switch">
+        <div class="switchs form-check form-switch"> 
+            <div class="switch-icons">{{ '<i class="fas fa-cart-arrow-down text-grey"></i>' if restaurant.is_active else '<i class="fas fa-cart-arrow-down text-grey"></i>' }}</div> 
             <input class="form-check-input" type="checkbox" role="switch" id="restaurantStatusSwitch" {% if restaurant.is_active %}checked{% endif %}>
-            <label class="form-check-label" for="restaurantStatusSwitch">Bestellungen {{ 'annahmen' if restaurant.is_active else 'ablehnen' }}</label>
+            <label tooltip="Bestellungen annehmen/ablehnen" class="form-check-label" for="restaurantStatusSwitch">Bestellungen {{ 'annahmen' if restaurant.is_active else 'ablehnen' }}</label>
+        </div>
+        <div class="switchs form-check form-switch">
+            <div class="switch-icons"><i class='{{ "far fa-eye text-grey" if restaurant.is_online else "far fa-eye-slash text-grey>" }}'</i></div>
+            <input class="form-check-input" type="checkbox" role="switch" id="restaurantOnlineSwitch" {% if restaurant.is_online %}checked{% endif %}>
+            <label tooltip="Restaurant anzeigen/nicht anzeigen" class="form-check-label" for="restaurantOnlineSwitch">Restaurant {{ 'anzeigen' if restaurant.is_online else 'nicht anzeigen' }}</label>
         </div>
     </div>
 

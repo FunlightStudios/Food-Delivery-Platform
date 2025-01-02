@@ -5,7 +5,7 @@
     
     {% if orders.items %}
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table text-gray">
                 <thead>
                     <tr>
                         <th>Bestellung #</th>
@@ -29,7 +29,7 @@
                         </td>
                         <td>{{ "%.2f"|format(order.total_amount) }} CHF</td>
                         <td>
-                            <a href="{{ url_for('orders.order_details', order_id=order.id) }}" class="btn btn-sm btn-primary">Details</a>
+                            <a href="{{ url_for('orders.order_detail', order_id=order.id) }}" class="btn btn-sm btn-primary">Details</a>
                             {% if order.status == 'completed' and not order.review %}
                             <a href="{{ url_for('reviews.create_review', order_id=order.id) }}" class="btn btn-sm btn-success">Bewerten</a>
                             {% endif %}

@@ -1,0 +1,44 @@
+{% extends "backend/layout.html" %}
+{% block content %}
+<div class="spacer"></div>
+<div class="login-page">
+    <form class="login-form" method="POST" action="">
+        {{ form.hidden_tag() }}
+        <h3>Backend Login</h3>
+
+        <label for="email">Email</label>
+        {% if form.email.errors %}
+        {{ form.email(class="form-control is-invalid", id="email", placeholder="Email") }}
+        <div class="invalid-feedback">
+            {% for error in form.email.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ form.email(class="form-control", id="email", placeholder="Email") }}
+        {% endif %}
+
+        <label for="password">Password</label>
+        {% if form.password.errors %}
+        {{ form.password(class="form-control is-invalid", id="password", placeholder="Password") }}
+        <div class="invalid-feedback">
+            {% for error in form.password.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ form.password(class="form-control", id="password", placeholder="Password") }}
+        {% endif %}
+
+        <button class="login-button btn-outline-success" type="submit">Log In</button>
+
+        <div class="spacer"></div>
+        <div class="custom-center pt-3">
+            <small class="text-muted">
+                Nur für Mitarbeiter der {{ config.SiteCompany }}<br>
+            </small>
+        </div>
+    </form>
+</div>
+<div class="spacer"></div>
+{% endblock content %}

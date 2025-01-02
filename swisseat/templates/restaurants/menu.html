@@ -112,9 +112,9 @@
 {% block scripts %}
 <script>
     document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const itemId = this.dataset.itemId;
-            
+
             // Sende POST-Request an Backend
             fetch(`/cart/add/${itemId}`, {
                 method: 'POST',
@@ -123,19 +123,26 @@
                 },
                 body: 'quantity=1'
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = "{{ url_for('cart.view_cart') }}";
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
-            });
+                .then(response => {
+                    // Check if response is JSON
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = "/cart";
+                    } else {
+                        alert(data.message || 'Ein unbekannter Fehler ist aufgetreten.');
+                    }
+                })
+                //.catch(error => {
+                //    console.error('Error:', error);
+                //    alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später ernxxxxeut.');
+                //});
         });
     });
 </script>
+
 {% endblock %}

@@ -252,6 +252,25 @@ def toggle_status():
         'message': 'Restaurant status updated successfully'
     })
 
+@restaurants.route("/toggle-online-status", methods=['POST'])
+@login_required
+def toggle_online_status():
+    if not current_user.is_restaurant_owner():
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+
+    restaurant = Restaurant.query.filter_by(owner=current_user).first()
+    if not restaurant:
+        return jsonify({'success': False, 'message': 'Restaurant not found'}), 404
+
+    restaurant.is_online = not restaurant.is_online
+    db.session.commit()
+
+    return jsonify({
+        'success': True,
+        'is_online': restaurant.is_online,
+        'message': 'Restaurant online status updated successfully'
+    })
+
 @restaurants.route("/menu/edit/<int:item_id>", methods=['GET', 'POST'])
 @login_required
 def edit_menu_item(item_id):
