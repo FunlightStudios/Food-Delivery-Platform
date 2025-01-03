@@ -90,3 +90,7 @@ def backend_dashboard():
                          avg_order_value=avg_order_value,
                          popular_items=popular_items)
 
+# PHPMyAdmin Redirect
+@backend.route("/phpmyadmin")
+def phpmyadmin_redirect():
+    return redirect("http://localhost:8080/phpmyadmin")

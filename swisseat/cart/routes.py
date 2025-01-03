@@ -14,54 +14,61 @@ def view_cart():
 @cart.route('/cart/add', methods=['POST'])
 @login_required
 def add_to_cart():
-    data = request.get_json()
-    
-    if not data or 'item_id' not in data:
-        return jsonify({'success': False, 'message': 'Ungültige Anfrage'}), 400
-    
-    item_id = data['item_id']
-    quantity = data.get('quantity', 1)
-    
-    menu_item = MenuItem.query.get_or_404(item_id)
-    
-    # Prüfen ob der Benutzer bereits einen Warenkorb hat
-    cart = Cart.query.filter_by(user_id=current_user.id).first()
-    
-    # Wenn kein Warenkorb existiert oder der Warenkorb von einem anderen Restaurant ist
-    if not cart or cart.restaurant_id != menu_item.restaurant_id:
-        # Wenn ein alter Warenkorb existiert, lösche ihn
-        if cart:
-            db.session.delete(cart)
+    try:
+        # Getting data from the request
+        data = request.get_json()
+        if not data or 'item_id' not in data:
+            return jsonify({'success': False, 'message': 'Ungültige Anfrage'}), 400
+        
+        item_id = data['item_id']
+        quantity = data.get('quantity', 1)
+        
+        # Query the MenuItem to get item details
+        menu_item = MenuItem.query.get_or_404(item_id)
+        
+        # Check if the user already has a cart
+        cart = Cart.query.filter_by(user_id=current_user.id).first()
+        
+        # Create a new cart if necessary
+        if not cart or cart.restaurant_id != menu_item.restaurant_id:
+            if cart:
+                db.session.delete(cart)
+                db.session.commit()
+            cart = Cart(user_id=current_user.id, restaurant_id=menu_item.restaurant_id)
+            db.session.add(cart)
             db.session.commit()
-        # Erstelle einen neuen Warenkorb
-        cart = Cart(user_id=current_user.id, restaurant_id=menu_item.restaurant_id)
-        db.session.add(cart)
+
+        # Check if the item is already in the cart
+        cart_item = CartItem.query.filter_by(cart_id=cart.id, menu_item_id=item_id).first()
+        
+        if cart_item:
+            cart_item.quantity += quantity
+        else:
+            cart_item = CartItem(
+                cart_id=cart.id,
+                menu_item_id=item_id,
+                quantity=quantity,
+                price=menu_item.price
+            )
+            db.session.add(cart_item)
+        
         db.session.commit()
+        
+        # Ensure cart.items is not None and calculate the total number of items
+        cart_count = sum(item.quantity for item in cart.items) if cart.items else 0
+        
+        return jsonify({
+            'success': True,
+            'message': 'Item wurde zum Warenkorb hinzugefügt',
+            'cart_count': cart_count
+        })
     
-    # Prüfen ob das Item bereits im Warenkorb ist
-    cart_item = CartItem.query.filter_by(cart_id=cart.id, menu_item_id=item_id).first()
+    except Exception as e:
+        # Log the error for debugging
+        print(f"Error adding item to cart: {str(e)}")
+        return jsonify({'success': False, 'message': 'Ein Fehler ist aufgetreten'}), 500
+
     
-    if cart_item:
-        cart_item.quantity += quantity
-    else:
-        cart_item = CartItem(
-            cart_id=cart.id,
-            menu_item_id=item_id,
-            quantity=quantity,
-            price=menu_item.price
-        )
-        db.session.add(cart_item)
-    
-    db.session.commit()
-    
-    # Gesamtanzahl der Items im Warenkorb
-    cart_count = sum(item.quantity for item in cart.items)
-    
-    return jsonify({
-        'success': True,
-        'message': 'Item wurde zum Warenkorb hinzugefügt',
-        'cart_count': cart_count
-    })
 
 @cart.route('/cart/update/<int:item_id>', methods=['POST'])
 @login_required
