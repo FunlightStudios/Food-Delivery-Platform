@@ -72,10 +72,14 @@ def account():
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.address = form.address.data
+        current_user.phone = form.phone.data
         db.session.commit()
         flash('Ihr Account wurde aktualisiert!', 'success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.address.data = current_user.address
+        form.phone.data = current_user.phone
     return render_template('users/profile.html', title='Account', form=form)

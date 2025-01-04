@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import func
 from datetime import datetime, timedelta
 from swisseat import db
-from swisseat.models import Restaurant, MenuItem, Order, OrderItem, User
+from swisseat.models import Restaurant, MenuItem, Order, OrderItem, User, CmsSiteInfos
 from swisseat.backend.forms import  LoginForm
 
 backend = Blueprint('backend', __name__)
@@ -18,7 +18,7 @@ def staff_required(s):
     return decorated_function
 
 @backend.route("/backend")
-@backend.route("/backend/login" , methods=['GET', 'POST'])
+@backend.route("/backend/login", methods=['GET', 'POST'])
 def backend_login():
     if current_user.is_authenticated:
         return redirect(url_for('backend.dashboard'))
@@ -31,7 +31,12 @@ def backend_login():
             return redirect(next_page) if next_page else redirect(url_for('backend.dashboard'))
         else:
             flash('Login fehlgeschlagen. Bitte überprüfen Sie E-Mail und Passwort.', 'danger')
-    return render_template('backend/login.html', title='Backend Login', form=form)
+    return render_template(
+        'backend/login.html',
+        title='Backend Login',
+        form=form,
+    )
+
 
 
 @backend.route("/backend/dashboard")
@@ -89,6 +94,8 @@ def backend_dashboard():
                          total_revenue=total_revenue,
                          avg_order_value=avg_order_value,
                          popular_items=popular_items)
+
+
 
 # PHPMyAdmin Redirect
 @backend.route("/phpmyadmin")

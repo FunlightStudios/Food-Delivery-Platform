@@ -28,7 +28,10 @@
 </div>
 <div class="homepage">
 <section class="featured-restaurants mb-5">
-    <h2 class="mb-4">Beliebte Restaurants in Ihrer Nähe</h2>
+    <div class="d-flex justify-content-between mb-4">
+        <h2 class="mb-4">Beliebte Restaurants in Ihrer Nähe (5km)</h2>
+            <input style="margin-left: 20px; width: 200px; margin-top: 11px;" type="range" class="form-range" min="1" max="10" step="0.5" id="customRange3">
+    </div>
     <div class="row">
         {% for restaurant in restaurants %}
         <div class="col-md-4 mb-4">
@@ -59,27 +62,27 @@
 </section>
 </div>
 <section class="features mb-5">
-    <h2 class="home-title mb-4">Warum SwissEat?</h2>
+    <h2 class="home-title mb-4">{{ features_title }}</h2>
     <div class="row">
         <div class="col-md-4">
             <div class="text-center">
-                <i class="fas fa-utensils fa-3x mb-3"></i>
-                <h4>Faire Bedingungen</h4>
-                <p>Restaurants profitieren von fairen Bedingungen. Erfahren Sie mehr unter <a href="/ourway">swisseat.ch/ourway</a></p>
+                <i class="{{ features_icon_1 }} fa-3x mb-3"></i>
+                <h4>{{ features_title_1 }}</h4>
+                <p>{{ features_content_1 }} <a href="/ourway">swisseat.ch/ourway</a></p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="text-center">
-                <i class="fas fa-truck fa-3x mb-3"></i>
-                <h4>Restaurants liefern</h4>
-                <p>Die Restaurants liefern selbst und können so Lieferrouten deutlich besser planen</p>
+                <i class="{{ features_icon_2 }} fa-3x mb-3"></i>
+                <h4>{{ features_title_2 }}</h4>
+                <p>{{ features_content_2 }}</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="text-center">
-                <i class="fas fa-star fa-3x mb-3"></i>
-                <h4>Top Bewertungen</h4>
-                <p>Von unseren zufriedenen Kunden und Restaurants</p>
+                <i class="{{ features_icon_3 }} fa-3x mb-3"></i>
+                <h4>{{ features_title_3 }}</h4>
+                <p>{{ features_content_3 }}</p>
             </div>
         </div>
     </div>

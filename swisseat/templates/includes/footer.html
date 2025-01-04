@@ -2,15 +2,15 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <h5>Über SwissEat</h5>
-                <p>Ihre vertrauenswürdige Plattform für Essenslieferungen und Fairen Bedingungen für Restaurants in der Schweiz.</p>
+                <h5>{{ footer_info_title }}</h5>
+                <p>{{ footer_info_content }}</p>
             </div>
             <div class="col-md-4">
                 <h5>Kontakt</h5>
                 <ul class="list-unstyled">
-                    <li><i class="fas fa-envelope me-2"></i> info@swisseat.ch</li>
-                    <li><i class="fas fa-phone me-2"></i> +41 123 456 789</li>
-                    <li><i class="fas fa-map-marker-alt me-2"></i> Orpundstrasse 12, 2504 Biel, Schweiz</li>
+                    <li><i class="fas fa-envelope me-2"></i> {{ mail_info }}</li>
+                    <li><i class="fas fa-phone me-2"></i> {{ tel_support }}</li>
+                    <li><i class="fas fa-map-marker-alt me-2"></i> {{ address }}</li>
                 </ul>
             </div>
             <div class="col-md-4">
@@ -18,8 +18,7 @@
                     <div class="col-6">
                         <h5>Folgen Sie uns</h5>
                         <div class="social-links">
-                            <a href="#" class="me-2"><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="me-2"><i class="fab fa-github"></i></a>
                             <a href="#" class="me-2"><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-linkedin"></i></a>
                         </div>
@@ -35,10 +34,10 @@
                 </div>
             </div>
         </div>
-        <hr>
         {% include 'includes/cookie.html' %}
+        <hr>
         <div class="text-center">
-            <p class="mb-0">&copy; 2025 SwissEat. Alle Rechte vorbehalten. <br>
+            <p class="mb-0">&copy; 2025 {{ brand_name }}. Alle Rechte vorbehalten. <br>
                 <a href="{{ url_for('main.impressum') }}">Impressum</a> | <a href="{{ url_for('main.privacy') }}">Datenschutz</a></p>
         </div>
     </div>

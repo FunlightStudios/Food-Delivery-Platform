@@ -116,5 +116,11 @@ class CartItem(db.Model):
     cart = db.relationship('Cart', back_populates='items')
     menu_item = db.relationship('MenuItem', back_populates='cart_items')
 
+class CmsSiteInfos(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    variable = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.String(250), nullable=False)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
     def get_total(self):
         return self.price * self.quantity
