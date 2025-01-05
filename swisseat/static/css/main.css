@@ -979,7 +979,7 @@ footer .text-center a:hover {
 
 .cart .card {
     border: none;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
 }
 
 .cart .card-header {
@@ -988,7 +988,13 @@ footer .text-center a:hover {
 }
 
 .cart .card-body {
-    background-color: #282828;
+    background-color: #21222d;
+}
+
+.cart .modal-content {
+    background-color: #21222d;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
 }
 
 

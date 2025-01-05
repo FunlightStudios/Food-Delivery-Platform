@@ -22,6 +22,9 @@ class User(db.Model, UserMixin):
     def is_restaurant_owner(self):
         return self.role == 'restaurant_owner'
 
+    def is_admin(self):
+        return self.role == 'admin'
+
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 
@@ -115,6 +118,10 @@ class CartItem(db.Model):
     price = db.Column(db.Float, nullable=False)
     cart = db.relationship('Cart', back_populates='items')
     menu_item = db.relationship('MenuItem', back_populates='cart_items')
+    get_total = db.Column(db.Float, nullable=False)
+
+    def get_total(self):
+        return self.price * self.quantity
 
 class CmsSiteInfos(db.Model):
     id = db.Column(db.Integer, primary_key=True)

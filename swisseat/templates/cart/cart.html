@@ -66,6 +66,27 @@
             Ihr Warenkorb ist leer. <a href="{{ url_for('restaurants.list') }}">Jetzt bestellen</a>
         </div>
     {% endif %}
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Hinweis</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Dynamischer Text hier -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" id="modalConfirmButton" class="btn btn-primary">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 
 <script>
@@ -91,27 +112,62 @@ function updateQuantity(itemId, delta) {
     });
 }
 
-function removeFromCart(itemId) {
-    if (!confirm('Möchten Sie diesen Artikel wirklich aus dem Warenkorb entfernen?')) {
-        return;
+    function removeFromCart(itemId) {
+        // Hole das Modal-Element
+        const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+        const modalTitle = document.getElementById('notificationModalLabel');
+        const modalBody = document.querySelector('#notificationModal .modal-body');
+        const confirmButton = document.getElementById('modalConfirmButton');
+
+        // Setze den Titel und die Nachricht des Modals
+        modalTitle.textContent = 'Artikel entfernen';
+        modalBody.textContent = 'Möchten Sie diesen Artikel wirklich aus dem Warenkorb entfernen?';
+
+        // Zeige das Modal an
+        modal.show();
+
+        // Bestätigungsbutton mit Event-Listener aktualisieren
+        confirmButton.onclick = function () {
+            // Fetch-Request ausführen
+            fetch(`/cart/remove/${itemId}`, {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        showErrorModal(data.message || 'Ein Fehler ist aufgetreten');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showErrorModal('Ein Fehler ist aufgetreten');
+                });
+
+            // Modal schließen
+            modal.hide();
+        };
     }
-    
-    fetch(`/cart/remove/${itemId}`, {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            alert(data.message || 'Ein Fehler ist aufgetreten');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Ein Fehler ist aufgetreten');
-    });
-}
+
+    // Fehler-Modal anzeigen
+    function showErrorModal(message) {
+        const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+        const modalTitle = document.getElementById('notificationModalLabel');
+        const modalBody = document.querySelector('#notificationModal .modal-body');
+        const confirmButton = document.getElementById('modalConfirmButton');
+
+        // Titel und Nachricht anpassen
+        modalTitle.textContent = 'Fehler';
+        modalBody.textContent = message;
+
+        // Nur den "Abbrechen"-Button anzeigen
+        confirmButton.style.display = 'none';
+
+        // Modal anzeigen
+        modal.show();
+    }
+
 
 function clearCart() {
     if (!confirm('Möchten Sie den Warenkorb wirklich leeren?')) {
