@@ -60,7 +60,10 @@ class UpdateAccountForm(FlaskForm):
                          validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('E-Mail',
                        validators=[DataRequired(), Email()])
-    address = StringField('Adresse')
+    street = StringField('Straße')
+    city = StringField('Stadt')
+    zipcode = StringField('PLZ')
+    country = StringField('Land')
     phone = StringField('Telefon')
     submit = SubmitField('Aktualisieren')
 

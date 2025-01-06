@@ -1,10 +1,12 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from swisseat import db, bcrypt
-from swisseat.models import User
+from swisseat.models import User, UserAddress
 from swisseat.users.forms import RegistrationForm, LoginForm, RestaurantRegistrationForm, UpdateAccountForm
+from sqlalchemy import select
 
 users = Blueprint('users', __name__)
+
 
 @users.route("/register", methods=['GET', 'POST'])
 def register():
@@ -68,11 +70,21 @@ def logout():
 @users.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
+    if current_user.is_authenticated:
+        current_user_address = db.session.execute(
+            select(UserAddress.street, UserAddress.city, UserAddress.zipcode, UserAddress.country)
+            .where(UserAddress.user_id == current_user.id)
+        ).first()
+    else:
+        current_user_address = None  # oder eine andere geeignete Handhabung
     form = UpdateAccountForm()
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
-        current_user.address = form.address.data
+        current_user_address.street = form.street.data
+        current_user_address.city = form.city.data
+        current_user_address.zipcode = form.zipcode.data
+        current_user_address.country = form.country.data
         current_user.phone = form.phone.data
         db.session.commit()
         flash('Ihr Account wurde aktualisiert!', 'success')
@@ -80,6 +92,9 @@ def account():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
-        form.address.data = current_user.address
+        form.street.data = current_user_address.street
+        form.city.data = current_user_address.city
+        form.zipcode.data = current_user_address.zipcode
+        form.country.data = current_user_address.country
         form.phone.data = current_user.phone
     return render_template('users/profile.html', title='Account', form=form)

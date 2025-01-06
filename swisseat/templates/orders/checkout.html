@@ -14,12 +14,12 @@
                     {% if current_user.address %}
                         <p class="mb-0" id="delivery-address">{{ current_user.address }}</p>
                         <small class="text-muted">
-                            <a href="{{ url_for('users.register') }}">Adresse ändern</a>
+                            <a href="{{ url_for('users.account') }}">Adresse ändern</a>
                         </small>
                     {% else %}
                         <div class="alert alert-warning">
                             Bitte fügen Sie eine Lieferadresse in Ihrem 
-                            <a href="{{ url_for('users.register') }}">Profil</a> hinzu.
+                            <a href="{{ url_for('users.account') }}">Profil</a> hinzu.
                         </div>
                     {% endif %}
                 </div>

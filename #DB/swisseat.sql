@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 03. Jan 2025 um 02:53
+-- Erstellungszeit: 06. Jan 2025 um 04:49
 -- Server-Version: 8.0.40
 -- PHP-Version: 8.3.13
 
@@ -38,7 +38,8 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`id`, `user_id`, `restaurant_id`) VALUES
-(2, 5, 2);
+(2, 5, 2),
+(3, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,47 @@ CREATE TABLE `cart_item` (
 INSERT INTO `cart_item` (`id`, `cart_id`, `menu_item_id`, `quantity`, `price`) VALUES
 (2, 2, 4, 2, 2.5),
 (3, 2, 2, 3, 10.5),
-(4, 2, 3, 1, 8.5);
+(4, 2, 3, 1, 8.5),
+(23, 3, 5, 2, 2.5),
+(26, 3, 3, 2, 8.5);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `cms_site_infos`
+--
+
+CREATE TABLE `cms_site_infos` (
+  `id` int NOT NULL,
+  `variable` varchar(200) DEFAULT NULL,
+  `content` varchar(250) DEFAULT NULL,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Daten für Tabelle `cms_site_infos`
+--
+
+INSERT INTO `cms_site_infos` (`id`, `variable`, `content`, `updated_at`) VALUES
+(1, 'brandname', 'SwissEat', '2025-01-03 15:00:53'),
+(2, 'company', 'SwissEat GmbH', '2025-01-03 15:00:53'),
+(3, 'mail_info', 'info@swisseat.ch', '2025-01-04 01:22:57'),
+(4, 'mail_support', 'support@swisseat.ch', '2025-01-04 01:22:57'),
+(5, 'mail_webadmin', 'it@swisseat.ch', '2025-01-04 01:24:52'),
+(6, 'tel_support', '+41771231212', '2025-01-04 01:24:52'),
+(7, 'address', 'Orpundstrasse 12, 2504 Biel, Schweiz', '2025-01-04 01:57:18'),
+(9, 'features_title', 'Warum SwissEat?', '2025-01-04 02:03:00'),
+(10, 'features_icon_1', 'fas fa-utensils', '2025-01-04 02:03:00'),
+(11, 'features_title_1', 'Faire Bedingungen', '2025-01-04 02:08:30'),
+(12, 'features_content_1', 'Restaurants profitieren von fairen Bedingungen. Erfahren Sie mehr unter', '2025-01-04 02:08:30'),
+(13, 'features_icon_2', 'fas fa-truck', '2025-01-04 02:08:30'),
+(14, 'features_title_2', 'Restaurants liefern', '2025-01-04 02:08:30'),
+(15, 'features_content_2', 'Die Restaurants liefern selbst und können so Lieferrouten deutlich besser planen', '2025-01-04 02:08:30'),
+(16, 'features_icon_3', 'fas fa-star', '2025-01-04 02:08:30'),
+(17, 'features_title_3', 'Top Bewertungen', '2025-01-04 02:08:30'),
+(18, 'features_content_3', 'Von unseren zufriedenen Kunden und Restaurants', '2025-01-04 02:08:30'),
+(19, 'footer_info_title', 'Über SwissEat', '2025-01-04 02:34:36'),
+(20, 'footer_info_content', 'Ihre vertrauenswürdige Plattform für Essenslieferungen und Fairen Bedingungen für Restaurants in der Schweiz.', '2025-01-04 02:34:36');
 
 -- --------------------------------------------------------
 
@@ -221,7 +262,7 @@ CREATE TABLE `user` (
   `email` varchar(18) DEFAULT NULL,
   `password` varchar(60) DEFAULT NULL,
   `role` varchar(16) DEFAULT NULL,
-  `address` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `address` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `phone` varchar(12) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -234,7 +275,33 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`, `role`, `address`, `p
 (2, 'Jerry', 'user@example.com', '$2b$12$rB4Dovu40T/EZ/LYp2JqzuqnYXP1mlcgFNyzkpeXGIi/qyox5iNkq', 'customer', 'Examplestr. 01, 2345 Example City', '+4112312312'),
 (3, 'Mett Pizza', 'owner1@example.com', '$2b$12$ZggqQpDL8FGPDMI0ALQ4dexq6RuAqKKGEuxw/ECCNmZKKIc/smvzK', 'restaurant_owner', 'Examplestr. 01, 2345 Example City', '+4112312312'),
 (4, 'KüBBan', 'owner2@example.com', '$2b$12$LWliYnYU0dQgBRdpzywXzeoxcHVEev9VWQzuVN9nGQ5xqbjcQOV5S', 'restaurant_owner', 'Examplestr. 01, 2345 Example City', '+4112312312'),
-(5, 'Mario Fratelli', 'owner3@example.com', '$2b$12$JO12Aijb9.rDYMDQHwdab.5WdR98EZnai5KBN1PSH8kCrESAMMtWC', 'restaurant_owner', 'Examplestr. 01, 2345 Example City', '+4112312312');
+(5, '444', 'owner3@example.com', '$2b$12$JO12Aijb9.rDYMDQHwdab.5WdR98EZnai5KBN1PSH8kCrESAMMtWC', 'restaurant_owner', 'Examplestr. 01, 2345 Example City', '+4112312312');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `user_address`
+--
+
+CREATE TABLE `user_address` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `street` varchar(255) NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `zipcode` varchar(20) NOT NULL,
+  `country` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Daten für Tabelle `user_address`
+--
+
+INSERT INTO `user_address` (`id`, `user_id`, `street`, `city`, `zipcode`, `country`) VALUES
+(1, 1, 'Examplestr. 01', 'Example City', '2345', 'Switzerland'),
+(2, 2, 'Example City', 'Example City', '2345', 'Switzerland'),
+(3, 3, 'Example City', 'Example City', '2345', 'Switzerland'),
+(4, 4, 'Example City', 'Example City', '2345', 'Switzerland'),
+(5, 5, 'Example City', 'Example City', '2345', 'Switzerland');
 
 --
 -- Indizes der exportierten Tabellen
@@ -250,6 +317,12 @@ ALTER TABLE `cart`
 -- Indizes für die Tabelle `cart_item`
 --
 ALTER TABLE `cart_item`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `cms_site_infos`
+--
+ALTER TABLE `cms_site_infos`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -289,6 +362,13 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `user_address`
+--
+ALTER TABLE `user_address`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
@@ -296,13 +376,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT für Tabelle `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` tinyint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` tinyint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `cart_item`
 --
 ALTER TABLE `cart_item`
-  MODIFY `id` tinyint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` tinyint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT für Tabelle `cms_site_infos`
+--
+ALTER TABLE `cms_site_infos`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT für Tabelle `menu_item`
@@ -339,6 +425,22 @@ ALTER TABLE `review`
 --
 ALTER TABLE `user`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT für Tabelle `user_address`
+--
+ALTER TABLE `user_address`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- Constraints der exportierten Tabellen
+--
+
+--
+-- Constraints der Tabelle `user_address`
+--
+ALTER TABLE `user_address`
+  ADD CONSTRAINT `user_address_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

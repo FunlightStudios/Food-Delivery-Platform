@@ -1,6 +1,6 @@
 from datetime import datetime
 from swisseat import db, login_manager
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -129,5 +129,10 @@ class CmsSiteInfos(db.Model):
     content = db.Column(db.String(250), nullable=False)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    def get_total(self):
-        return self.price * self.quantity
+class UserAddress(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    street = db.Column(db.String(255), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    zipcode = db.Column(db.String(20), nullable=False)
+    country = db.Column(db.String(100), nullable=False)
