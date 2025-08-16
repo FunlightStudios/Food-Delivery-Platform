@@ -3,8 +3,9 @@
 SwissEat is a sleek and modern food delivery platform built with Flask, designed to connect hungry customers with local restaurants in Switzerland. The platform features a dark mode UI and provides an intuitive experience for both customers and restaurant owners.
 
 # ⚠️ Work in Progress
+## ▐▐ Paused
 
-This project is under active development and not production-ready yet. (Project in German)
+This project is paused and not production-ready yet. (Project in German)
 
 ![Home](screenshot01.png)
 ![Restaurant Dashboard](screenshot02.png)
